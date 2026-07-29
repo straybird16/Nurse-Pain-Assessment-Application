@@ -18,17 +18,19 @@ Python standard library and requires Python 3.10 or newer.
 
 If you have not already downloaded the project, clone it from GitHub first.
 
-1. Copy the repository URL from the GitHub page by clicking **Code → HTTPS** and copying the URL.  
+1. Copy the repository URL from the GitHub page by clicking **Code → HTTPS** and copying the URL.
 2. Open a terminal (Terminal on macOS/Linux, Windows Terminal or PowerShell on Windows).
 3. Change to the directory where you want to store the project. For example:
-   **macOS / Linux**
-   ```shell
-   cd ~/Downloads
-   ```
 
-Windows
+**
+    MacOs/Linux:**
 
-`cd "$HOME\Downloads"`
+    `cd ~/Downloads`
+
+**
+    Windows:**
+
+    `cd "$HOME\Downloads"`
 
 4. Clone the repository:
 
