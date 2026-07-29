@@ -151,7 +151,7 @@ final command.
 On macOS:
 
 - `Command+Enter`: record the current assessment
-- `Command+Esc`: clear notes
+- `Command+Esc`: clear notes (may not work due to shortcut conflicts)
 
 On Windows and Linux:
 
