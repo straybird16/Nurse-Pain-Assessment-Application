@@ -1,5 +1,17 @@
 # PAINAD Recorder
 
+## Table of Contents
+
+- [Installation](#installation)
+  - [macOS](#macos)
+  - [Windows](#windows)
+  - [Linux](#linux)
+- [Shortcuts](#shortcuts)
+
+---
+
+A small Tkinter app for recording nurse PAINAD assessments...
+
 A small Tkinter app for recording nurse PAINAD assessments. It uses only the
 Python standard library and requires Python 3.10 or newer.
 
@@ -65,7 +77,6 @@ For later use, open Terminal, return to the `NurseAssessment` folder as in step
    ```powershell
    cd "C:\Users\YourName\Downloads\PA_app\NurseAssessment"
    ```
-
 4. Check the installation:
 
    ```powershell
@@ -81,7 +92,6 @@ For later use, open Terminal, return to the `NurseAssessment` folder as in step
    py -m venv .venv
    .\.venv\Scripts\python.exe -m pip install -r requirements.txt
    ```
-
 6. Start the app:
 
    ```powershell
@@ -107,13 +117,11 @@ final command.
    ```shell
    sudo dnf install python3 python3-pip python3-tkinter
    ```
-
 3. Change to the downloaded `NurseAssessment` folder. For example:
 
    ```shell
    cd ~/Downloads/PA_app/NurseAssessment
    ```
-
 4. Check the installation:
 
    ```shell
@@ -129,7 +137,6 @@ final command.
    python3 -m venv .venv
    .venv/bin/python -m pip install -r requirements.txt
    ```
-
 6. Start the app:
 
    ```shell
@@ -141,13 +148,12 @@ final command.
 
 ## Shortcuts
 
+On macOS:
+
+- `Command+Enter`: record the current assessment
+- `Command+Esc`: clear notes
+
+On Windows and Linux:
+
 - `Alt+Enter`: record the current assessment
 - `Alt+Esc`: clear notes
-
-## Tests
-
-Run the focused tests with:
-
-```shell
-python3 -m unittest -v
-```
