@@ -553,8 +553,15 @@ class PainadRecorderApp:
         self.subject_entry.focus_set()
 
     def _bind_shortcuts(self) -> None:
-        self.root.bind("<Alt-Return>", self._record_shortcut)
-        self.root.bind("<Alt-Escape>", self._clear_notes_shortcut)
+        windowing_system = str(self.root.tk.call("tk", "windowingsystem"))
+        if windowing_system == "aqua":
+            self.root.bind("<Command-Return>", self._record_shortcut)
+            self.root.bind("<Command-KP_Enter>", self._record_shortcut)
+            self.root.bind("<Command-Escape>", self._clear_notes_shortcut)
+        else:
+            self.root.bind("<Alt-Return>", self._record_shortcut)
+            self.root.bind("<Alt-KP_Enter>", self._record_shortcut)
+            self.root.bind("<Alt-Escape>", self._clear_notes_shortcut)
 
     def _record_shortcut(self, _event: tk.Event) -> str:
         self.record()
