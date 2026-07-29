@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Clone the Repository](#clone-the-repository)
 - [Installation](#installation)
   - [macOS](#macos)
   - [Windows](#windows)
@@ -10,10 +11,34 @@
 
 ---
 
-A small Tkinter app for recording nurse PAINAD assessments...
-
 A small Tkinter app for recording nurse PAINAD assessments. It uses only the
 Python standard library and requires Python 3.10 or newer.
+
+## Clone the Repository
+
+If you have not already downloaded the project, clone it from GitHub first.
+
+1. Copy the repository URL from the GitHub page by clicking **Code → HTTPS** and copying the URL.  
+2. Open a terminal (Terminal on macOS/Linux, Windows Terminal or PowerShell on Windows).
+3. Change to the directory where you want to store the project. For example:
+   **macOS / Linux**
+   ```shell
+   cd ~/Downloads
+   ```
+
+Windows
+
+`cd "$HOME\Downloads"`
+
+4. Clone the repository:
+
+`git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git`
+
+5. Enter the project directory:
+
+`cd YOUR-REPOSITORY`
+
+You are now inside the project folder and can continue with the installation instructions for your operating system.
 
 ## Installation
 
@@ -23,9 +48,7 @@ distributions often provide them as separate packages. The commands below still
 create a private Python environment so the app remains isolated from other
 software.
 
-Before starting, download or copy the project to a convenient location and
-unzip it if necessary. The folder used in the commands is the
-`NurseAssessment` folder containing `app.py`.
+Before starting, complete the steps in **Clone the Repository** above. All commands below should be run from the cloned `NurseAssessment` project folder containing `app.py`.
 
 ### macOS
 
