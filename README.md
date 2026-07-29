@@ -21,15 +21,11 @@ If you have not already downloaded the project, clone it from GitHub first.
 1. Copy the repository URL from the GitHub page by clicking **Code → HTTPS** and copying the URL.
 2. Open a terminal (Terminal on macOS/Linux, Windows Terminal or PowerShell on Windows).
 3. Change to the directory where you want to store the project. For example:
-
-**
-    MacOs/Linux:**
-
+  
+  **MacOs/Linux:**
     `cd ~/Downloads`
 
-**
-    Windows:**
-
+  **Windows:**
     `cd "$HOME\Downloads"`
 
 4. Clone the repository:
