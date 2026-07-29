@@ -395,7 +395,12 @@ class PainadRecorderApp:
             self.estimate_buttons[score] = button
 
         self.estimate_slider_frame = ttk.Frame(estimate, style="Card.TFrame")
-        self.estimate_slider_frame.columnconfigure(0, weight=1)
+        for column in range(3):
+            self.estimate_slider_frame.columnconfigure(
+                column,
+                weight=1,
+                uniform="slider_ticks",
+            )
         self.estimated_scale = ttk.Scale(
             self.estimate_slider_frame,
             from_=0.0,
