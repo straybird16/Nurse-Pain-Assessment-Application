@@ -72,6 +72,34 @@ class PainadToggleTests(unittest.TestCase):
         self.assertEqual(0, app.recorder.append_calls)
 
 
+class NurseScoreControlTests(unittest.TestCase):
+    def test_button_selection_sets_score_then_records_once(self) -> None:
+        app = PainadRecorderApp.__new__(PainadRecorderApp)
+        calls: list[tuple[str, float | None]] = []
+        app._set_estimated_pain = lambda value: calls.append(("set", value))
+        app.record = lambda: calls.append(("record", None))
+
+        app._select_and_record_estimated_pain(7.0)
+
+        self.assertEqual([("set", 7.0), ("record", None)], calls)
+
+    def test_record_shortcut_only_records_in_slider_mode(self) -> None:
+        app = PainadRecorderApp.__new__(PainadRecorderApp)
+        app.estimated_mode_var = _FakeVariable("buttons")
+        recorded: list[bool] = []
+        statuses: list[str] = []
+        app.record = lambda: recorded.append(True)
+        app._show_status = lambda message, _duration: statuses.append(message)
+
+        self.assertEqual("break", app._record_shortcut(None))
+        self.assertEqual([], recorded)
+        self.assertEqual(["Select a pain button to record."], statuses)
+
+        app.estimated_mode_var.set("slider")
+        self.assertEqual("break", app._record_shortcut(None))
+        self.assertEqual([True], recorded)
+
+
 class RecorderTests(unittest.TestCase):
     def test_nurse_score_records_when_all_optional_fields_are_blank(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

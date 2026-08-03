@@ -46,6 +46,7 @@ class PainadRecorderApp:
         self.estimated_var = tk.DoubleVar(value=0.0)
         self.estimated_display_var = tk.StringVar(value="0.0")
         self.estimated_mode_var = tk.StringVar(value="buttons")
+        self.estimated_hint_var = tk.StringVar()
         self._status_timer: str | None = None
 
         self._configure_window()
@@ -138,7 +139,7 @@ class PainadRecorderApp:
             background="#F8FAFC",
             foreground=TEXT,
             font=self.painad_button_font,
-            padding=(6, 5),
+            padding=(5, 2),
             bordercolor=BORDER,
             borderwidth=1,
             relief="solid",
@@ -155,7 +156,7 @@ class PainadRecorderApp:
             background=PAINAD_SELECTED,
             foreground=PAINAD_SELECTED_TEXT,
             font=self.painad_button_font,
-            padding=(6, 5),
+            padding=(5, 2),
             bordercolor="#86EFAC",
             borderwidth=1,
             relief="sunken",
@@ -218,8 +219,8 @@ class PainadRecorderApp:
             "Estimate.TButton",
             background="#F8FAFC",
             foreground=TEXT,
-            font=(font_family, 12, "bold"),
-            padding=(4, 8),
+            font=(font_family, 17, "bold"),
+            padding=(8, 13),
             borderwidth=1,
         )
         style.map(
@@ -230,8 +231,8 @@ class PainadRecorderApp:
             "EstimateSelected.TButton",
             background=PRIMARY,
             foreground="#FFFFFF",
-            font=(font_family, 12, "bold"),
-            padding=(4, 8),
+            font=(font_family, 17, "bold"),
+            padding=(8, 13),
             borderwidth=1,
         )
         style.map(
@@ -343,7 +344,7 @@ class PainadRecorderApp:
         ).grid(row=0, column=0, sticky="w")
         ttk.Label(
             estimate_summary,
-            text="Changing a value does not record it.",
+            textvariable=self.estimated_hint_var,
             style="EstimateHint.TLabel",
         ).grid(row=1, column=0, sticky="w")
         ttk.Label(
@@ -373,24 +374,35 @@ class PainadRecorderApp:
 
         self.estimate_button_frame = ttk.Frame(estimate, style="Card.TFrame")
         self.estimate_button_frame.grid(row=1, column=0, sticky="ew")
-        for score in range(11):
+        for column in range(12):
             self.estimate_button_frame.columnconfigure(
-                score,
+                column,
                 weight=1,
                 uniform="estimate",
             )
+        for score in range(11):
             button = ttk.Button(
                 self.estimate_button_frame,
                 text=str(score),
                 width=2,
-                command=lambda value=score: self._set_estimated_pain(float(value)),
+                command=lambda value=score: self._select_and_record_estimated_pain(
+                    float(value)
+                ),
                 style="Estimate.TButton",
             )
+            if score <= 5:
+                row = 0
+                column = score * 2
+            else:
+                row = 1
+                column = 1 + (score - 6) * 2
             button.grid(
-                row=0,
-                column=score,
+                row=row,
+                column=column,
+                columnspan=2,
                 sticky="ew",
-                padx=(0 if score == 0 else 2, 0 if score == 10 else 2),
+                padx=4,
+                pady=4,
             )
             self.estimate_buttons[score] = button
 
@@ -428,7 +440,7 @@ class PainadRecorderApp:
         assessment = ttk.LabelFrame(
             main,
             text="PAINAD Assessment (optional)",
-            padding=10,
+            padding=6,
             style="Card.TLabelframe",
         )
         assessment.grid(row=3, column=0, sticky="ew", pady=(0, 8))
@@ -462,7 +474,7 @@ class PainadRecorderApp:
                     column=score + 1,
                     sticky="nsew",
                     padx=(0 if score == 0 else 2, 0 if score == 2 else 2),
-                    pady=3,
+                    pady=1,
                 )
                 self.painad_buttons[item_key][score] = button
 
@@ -487,7 +499,7 @@ class PainadRecorderApp:
         notes = ttk.LabelFrame(
             main,
             text="Notes (optional)",
-            padding=8,
+            padding=5,
             style="Card.TLabelframe",
         )
         notes.grid(row=4, column=0, sticky="ew", pady=(0, 8))
@@ -495,7 +507,7 @@ class PainadRecorderApp:
         self.notes_text = tk.Text(
             notes,
             width=40,
-            height=2,
+            height=1,
             wrap="word",
             undo=True,
             background="#FBFDFF",
@@ -507,26 +519,25 @@ class PainadRecorderApp:
             highlightbackground=BORDER,
             highlightcolor=PRIMARY,
             padx=9,
-            pady=7,
+            pady=4,
             font="TkTextFont",
         )
         self.notes_text.grid(row=0, column=0, sticky="ew")
 
-        self._set_estimated_mode("buttons")
-        self._set_estimated_pain(0.0)
-
         actions = ttk.Frame(main, style="App.TFrame")
+        self.actions_frame = actions
         actions.grid(row=5, column=0, sticky="ew")
         actions.columnconfigure(0, weight=1)
         actions.columnconfigure(1, weight=1)
         actions.columnconfigure(2, weight=1)
 
-        ttk.Button(
+        self.record_button = ttk.Button(
             actions,
             text="Record",
             command=self.record,
             style="Record.TButton",
-        ).grid(row=0, column=0, sticky="ew", padx=(0, 6))
+        )
+        self.record_button.grid(row=0, column=0, sticky="ew", padx=(0, 6))
         self.undo_button = ttk.Button(
             actions,
             text="Undo Last Record",
@@ -535,26 +546,37 @@ class PainadRecorderApp:
         )
         self.undo_button.grid(row=0, column=1, sticky="ew", padx=6)
         self.undo_button.state(["disabled"])
-        ttk.Button(
+        self.end_button = ttk.Button(
             actions,
             text="End Session",
             command=self.end_session,
             style="End.TButton",
-        ).grid(row=0, column=2, sticky="ew", padx=(6, 0))
+        )
+        self.end_button.grid(row=0, column=2, sticky="ew", padx=(6, 0))
 
-        ttk.Label(
+        self.status_label = ttk.Label(
             actions,
             textvariable=self.status_var,
             style="Status.TLabel",
-        ).grid(row=1, column=0, columnspan=3, sticky="w", pady=(9, 0))
-        ttk.Label(
+        )
+        self.status_label.grid(
+            row=1,
+            column=0,
+            columnspan=3,
+            sticky="w",
+            pady=(9, 0),
+        )
+        self.file_label = ttk.Label(
             actions,
             textvariable=self.file_var,
             style="File.TLabel",
-        ).grid(
+        )
+        self.file_label.grid(
             row=2, column=0, columnspan=3, sticky="e", pady=(3, 0)
         )
 
+        self._set_estimated_pain(0.0)
+        self._set_estimated_mode("buttons")
         self.subject_entry.focus_set()
 
     def _bind_shortcuts(self) -> None:
@@ -569,7 +591,10 @@ class PainadRecorderApp:
             self.root.bind("<Alt-Escape>", self._clear_notes_shortcut)
 
     def _record_shortcut(self, _event: tk.Event) -> str:
-        self.record()
+        if self.estimated_mode_var.get() == "buttons":
+            self._show_status("Select a pain button to record.", 1_500)
+        else:
+            self.record()
         return "break"
 
     def _clear_notes_shortcut(self, _event: tk.Event) -> str:
@@ -632,19 +657,72 @@ class PainadRecorderApp:
         if mode == "buttons":
             self.estimate_slider_frame.grid_remove()
             self.estimate_button_frame.grid(row=1, column=0, sticky="ew")
+            self.estimated_hint_var.set("Tap a pain button to save immediately.")
         else:
             self.estimate_button_frame.grid_remove()
             self.estimate_slider_frame.grid(row=1, column=0, sticky="ew")
+            self.estimated_hint_var.set("Adjust the slider, then press Record.")
         for name, button in self.mode_buttons.items():
             button.configure(
                 style="ModeSelected.TButton" if name == mode else "Mode.TButton"
             )
+        if hasattr(self, "record_button"):
+            self._layout_actions_for_mode(mode)
+
+    def _layout_actions_for_mode(self, mode: str) -> None:
+        if mode == "buttons":
+            self.record_button.grid_remove()
+            self.undo_button.grid_configure(
+                row=0,
+                column=0,
+                sticky="ew",
+                padx=(0, 6),
+            )
+            self.end_button.grid_configure(
+                row=0,
+                column=1,
+                sticky="ew",
+                padx=(6, 0),
+            )
+            self.actions_frame.columnconfigure(0, weight=1)
+            self.actions_frame.columnconfigure(1, weight=1)
+            self.actions_frame.columnconfigure(2, weight=0)
+            column_span = 2
+        else:
+            self.record_button.grid(
+                row=0,
+                column=0,
+                sticky="ew",
+                padx=(0, 6),
+            )
+            self.undo_button.grid_configure(
+                row=0,
+                column=1,
+                sticky="ew",
+                padx=6,
+            )
+            self.end_button.grid_configure(
+                row=0,
+                column=2,
+                sticky="ew",
+                padx=(6, 0),
+            )
+            for column in range(3):
+                self.actions_frame.columnconfigure(column, weight=1)
+            column_span = 3
+        self.status_label.grid_configure(columnspan=column_span)
+        self.file_label.grid_configure(columnspan=column_span)
 
     def _on_estimated_slider(self, value: str) -> None:
         self._set_estimated_pain(float(value))
 
+    def _select_and_record_estimated_pain(self, value: float) -> None:
+        """Set a button-mode score and immediately persist one assessment."""
+        self._set_estimated_pain(value)
+        self.record()
+
     def _set_estimated_pain(self, value: float) -> None:
-        """Set and display a 0.5-step nurse estimate without recording it."""
+        """Set and display a 0.5-step nurse estimate."""
         snapped = round(max(0.0, min(10.0, float(value))) * 2) / 2
         self.estimated_var.set(snapped)
         self.estimated_display_var.set(f"{snapped:.1f}")

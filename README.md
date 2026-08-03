@@ -7,6 +7,7 @@
   - [macOS](#macos)
   - [Windows](#windows)
   - [Linux](#linux)
+- [Recording Workflow](#recording-workflow)
 - [Shortcuts](#shortcuts)
 
 ---
@@ -167,14 +168,28 @@ final command.
 For later use, open a terminal, return to the same folder, and repeat only the
 final command.
 
+## Recording Workflow
+
+Enter a Subject ID before recording. Session ID is optional and defaults to
+`1`.
+
+- In **0–10 Buttons** mode, selecting a pain score saves the assessment
+  immediately. There is no separate Record button in this mode.
+- In **Slider** mode, adjust the score in 0.5-point steps, then select
+  **Record** or use the recording shortcut.
+- PAINAD selections and notes are optional. They are included with the next
+  nurse pain score record but do not create records by themselves.
+
+CSV files are stored in the `records` folder beside `app.py`.
+
 ## Shortcuts
 
 On macOS:
 
-- `Command+Enter`: record the current assessment
+- `Command+Enter`: record the current assessment in Slider mode
 - `Command+Esc`: clear notes (may not work due to shortcut conflicts)
 
 On Windows and Linux:
 
-- `Alt+Enter`: record the current assessment
+- `Alt+Enter`: record the current assessment in Slider mode
 - `Alt+Esc`: clear notes
